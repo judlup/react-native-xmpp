@@ -31,20 +31,48 @@ import {
 // Tambien en la sección de control del puerto 5222 se debe deshabilitar starttls_required definiendoles el valor de false
 // Luego creando el registro de los usuario en la consola para el dominio de la ip 
 
-XMPP.on('message', (message) => console.log('MESSAGE:' + JSON.stringify(message)));
+//---
+var XMPP = require('react-native-xmpp');
+// optional callbacks
+XMPP.on('message', (message) =>
+  console.log('MESSAGE:' + JSON.stringify(message)),
+);
+
 XMPP.on('iq', (message) => console.log('IQ:' + JSON.stringify(message)));
-XMPP.on('presence', (message) => console.log('PRESENCE:' + JSON.stringify(message)));
+XMPP.on('presence', (message) =>
+  console.log('PRESENCE:' + JSON.stringify(message)),
+);
+
 XMPP.on('error', (message) => console.log('ERROR:' + message));
 XMPP.on('loginError', (message) => console.log('LOGIN ERROR:' + message));
 XMPP.on('login', (message) => console.log('LOGGED!'));
-XMPP.on('connect', (message) => console.log('CONNECTED!'));
+XMPP.on('connect', (message) => {
+  console.log('CONNECTED!');
+});
 XMPP.on('disconnect', (message) => console.log('DISCONNECTED!'));
 
-XMPP.trustHosts(['192.168.1.22']);
+var xmpp = XMPP.on('message', (message) =>
+  console.log('MESSAGE:' + JSON.stringify(message)),
+);
 
-XMPP.connect("cliente@192.168.1.22", "password");
+// trustHosts (ignore self-signed SSL issues)
+// Warning: Do not use this in production (security will be compromised).
+XMPP.trustHosts(['xmpp.jp']);
 
-XMPP.message('adadas', "admin@192.168.1.22");
+// connect
+XMPP.connect('juanhx@xmpp.jp', 'dasa5684');
+//PARA HACER UNA COEXION LOCAL HAY QUE DESABILITAR EL METODO DE CONEXION SSL EN:
+//node-modules/react-native-xmpp/android/src/main/java/rnxmpp/service/XmppServiceSmacklmopl.java --> Line 76
+//.setSecurityMode(ConnectionConfiguration.SecurityMode.required); ---->  .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+
+// send message
+function afterwait() {
+  XMPP.message('Hola', 'judlup@xmpp.jp');
+  console.log('Aqui se manda el mansaje');
+}
+console.log('Waiting...');
+setTimeout(afterwait, 10000);
+//---
 
 const App: () => React$Node = () => {
   return (
